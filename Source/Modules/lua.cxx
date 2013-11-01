@@ -46,6 +46,7 @@
 
 #include "swigmod.h"
 #include "cparse.h"
+#include "ptrguard.h"
 
 /**** Diagnostics:
   With the #define REPORT(), you can change the amount of diagnostics given
@@ -1010,7 +1011,7 @@ public:
   virtual int classHandler(Node *n) {
     //REPORT("classHandler", n);
 
-    String *mangled_classname = 0;
+    PtrGuard<String> mangled_classname;
     String *real_classname = 0;
 
     constructor_name = 0;
@@ -1039,23 +1040,23 @@ public:
 
     s_attr_tab = NewString("");
     Printf(s_attr_tab, "static swig_lua_attribute swig_");
-    Printv(s_attr_tab, mangled_classname, "_attributes[] = {\n", NIL);
+    Printv(s_attr_tab, mangled_classname.ptr(), "_attributes[] = {\n", NIL);
 
     s_methods_tab = NewString("");
     Printf(s_methods_tab, "static swig_lua_method swig_");
-    Printv(s_methods_tab, mangled_classname, "_methods[] = {\n", NIL);
+    Printv(s_methods_tab, mangled_classname.ptr(), "_methods[] = {\n", NIL);
 
     s_cls_methods_tab = NewString("");
     Printf(s_cls_methods_tab, "static swig_lua_method swig_");
-    Printv(s_cls_methods_tab, mangled_classname, "_cls_methods[] = {\n", NIL);
+    Printv(s_cls_methods_tab, mangled_classname.ptr(), "_cls_methods[] = {\n", NIL);
 
     s_cls_attr_tab = NewString("");
     Printf(s_cls_attr_tab, "static swig_lua_attribute swig_");
-    Printv(s_cls_attr_tab, mangled_classname, "_cls_attributes[] = {\n", NIL);
+    Printv(s_cls_attr_tab, mangled_classname.ptr(), "_cls_attributes[] = {\n", NIL);
 
     s_cls_const_tab = NewString("");
     Printf(s_cls_const_tab, "static swig_lua_const_info swig_");
-    Printv(s_cls_const_tab, mangled_classname, "_cls_constants[] = {\n", NIL);
+    Printv(s_cls_const_tab, mangled_classname.ptr(), "_cls_constants[] = {\n", NIL);
 
 
     // Generate normal wrappers
@@ -1065,14 +1066,14 @@ public:
     SwigType_add_pointer(t);
 
     // Catch all: eg. a class with only static functions and/or variables will not have 'remembered'
-    String *wrap_class = NewStringf("&_wrap_class_%s", mangled_classname);
+    String *wrap_class = NewStringf("&_wrap_class_%s", mangled_classname.ptr());
     SwigType_remember_clientdata(t, wrap_class);
 
     String *rt = Copy(getClassType());
     SwigType_add_pointer(rt);
 
     // Register the class structure with the type checker
-    //    Printf(f_init,"SWIG_TypeClientData(SWIGTYPE%s, (void *) &_wrap_class_%s);\n", SwigType_manglestr(t), mangled_classname);
+    //    Printf(f_init,"SWIG_TypeClientData(SWIGTYPE%s, (void *) &_wrap_class_%s);\n", SwigType_manglestr(t), mangled_classname.ptr());
  
     // emit a function to be called to delete the object 
     if (have_destructor) {
@@ -1149,12 +1150,12 @@ public:
       }
     }
 
-    Printv(f_wrappers, "static swig_lua_class *swig_", mangled_classname, "_bases[] = {", base_class, "0};\n", NIL);
+    Printv(f_wrappers, "static swig_lua_class *swig_", mangled_classname.ptr(), "_bases[] = {", base_class, "0};\n", NIL);
     Delete(base_class);
-    Printv(f_wrappers, "static const char *swig_", mangled_classname, "_base_names[] = {", base_class_names, "0};\n", NIL);
+    Printv(f_wrappers, "static const char *swig_", mangled_classname.ptr(), "_base_names[] = {", base_class_names, "0};\n", NIL);
     Delete(base_class_names);
 
-    Printv(f_wrappers, "static swig_lua_class _wrap_class_", mangled_classname, " = { \"", class_name, "\", &SWIGTYPE", SwigType_manglestr(t), ",", NIL);
+    Printv(f_wrappers, "static swig_lua_class _wrap_class_", mangled_classname.ptr(), " = { \"", class_name, "\", &SWIGTYPE", SwigType_manglestr(t), ",", NIL);
 
     if (have_constructor) {
       if (elua_ltr) {
@@ -1185,14 +1186,13 @@ public:
       Printf(f_wrappers, ",0");
     }
     Printf(f_wrappers, ", swig_%s_methods, swig_%s_attributes, { \"%s\", swig_%s_cls_methods, swig_%s_cls_attributes, swig_%s_cls_constants }, swig_%s_bases, swig_%s_base_names };\n\n",
-        mangled_classname, mangled_classname,
-        class_name, mangled_classname, mangled_classname, mangled_classname,
-        mangled_classname, mangled_classname);
+        mangled_classname.ptr(), mangled_classname.ptr(),
+        class_name, mangled_classname.ptr(), mangled_classname.ptr(), mangled_classname.ptr(),
+        mangled_classname.ptr(), mangled_classname.ptr());
 
-    //    Printv(f_wrappers, ", swig_", mangled_classname, "_methods, swig_", mangled_classname, "_attributes, swig_", mangled_classname, "_bases };\n\n", NIL);
-    //    Printv(s_cmd_tab, tab4, "{ SWIG_prefix \"", class_name, "\", (swig_wrapper_func) SWIG_ObjectConstructor, &_wrap_class_", mangled_classname, "},\n", NIL);
+    //    Printv(f_wrappers, ", swig_", mangled_classname.ptr(), "_methods, swig_", mangled_classname.ptr(), "_attributes, swig_", mangled_classname.ptr(), "_bases };\n\n", NIL);
+    //    Printv(s_cmd_tab, tab4, "{ SWIG_prefix \"", class_name, "\", (swig_wrapper_func) SWIG_ObjectConstructor, &_wrap_class_", mangled_classname.ptr(), "},\n", NIL);
     Delete(t);
-    Delete(mangled_classname);
     return SWIG_OK;
   }
 
