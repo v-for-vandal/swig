@@ -33,7 +33,15 @@
 //   Printf( stdout, "%s", guard.ptr() )
 // Usual functions, with defined signature, has no such problems:
 //   Swig_name_mangle( guard )
-template<typename T> // T is ignored because everything is DOH*
+//
+// typename T is effectively ignored, because everything is DOH*. But it is more readable to
+// write
+//   PtrGuard<String> string_name;
+//   PtrGuard<Hash> hash_name;
+// rather than
+//   PtrGuard is_it_string_or_hash;
+//   PtrGuard and_what_about_this_one;
+template<typename T> 
 class DohPtrGuard {
   public:
     // Creates guardian. Don't pass NIL - use default constructor for that
@@ -94,11 +102,11 @@ class DohPtrGuard {
 // Overloading DohDelete for DohPtrGuard. You might not call DohDelete on DohPtrGuard instances,
 // as it is supposed to manage underlying pointer by itself
 
-void DohDelete(const DohPtrGuard<DOH>& guard) {
+void DohDelete(const DohPtrGuard<DOH>& /*guard*/) {
   Printf( stderr, "ERROR: Attempt to delete guarded pointer without deleting it's guardian\n" );
   assert(false);
 }
-void DohDelete(DohPtrGuard<DOH>& guard) {
+void DohDelete(DohPtrGuard<DOH>& /*guard*/) {
   Printf( stderr, "ERROR: Attempt to delete guarded pointer without deleting it's guardian\n" );
   assert(false);
 }
