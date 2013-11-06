@@ -129,8 +129,10 @@ typedef struct swig_elua_entry {
 
 #define SWIG_LUA_DECL_ARGS_1(arg1) (lua_State *L, arg1)
 #define SWIG_LUA_DECL_ARGS_2(arg1, arg2) (lua_State *L, arg1, arg2)
+#define SWIG_LUA_DECL_ARGS_3(arg1, arg2, arg3) (lua_State *L, arg1, arg2, arg3)
 #define SWIG_LUA_CALL_ARGS_1(arg1) (L, arg1)
 #define SWIG_LUA_CALL_ARGS_2(arg1, arg2) (L, arg1, arg2)
+#define SWIG_LUA_CALL_ARGS_3(arg1, arg2, arg3) (L, arg1, arg2, arg3)
 /* -----------------------------------------------------------------------------
  * compatibility defines
  * ----------------------------------------------------------------------------- */
@@ -175,6 +177,11 @@ typedef struct swig_elua_entry {
 
 #endif
 
+// TODO: REMOVE
+/* Debug macroses */
+#define DO_SET_OUTPUT
+#define DO_APPEND_OUTPUT
+
 /* --------------------------------------------------------------------------
  * Helper functions for error handling
  * -------------------------------------------------------------------------- */
@@ -204,6 +211,12 @@ SWIG_Lua_pushferrstring (lua_State *L, const char *fmt, ...)
   lua_concat(L, 2);
 }
 
+#define SWIG_ErrorType(code) SWIG_Lua_ErrorType(code)
+#define SWIG_Error(code,msg) SWIG_Lua_Error(L, SWIG_ErrorType(code),msg)
+
+void SWIG_Lua_Error(lua_State *L, const char *errorType, const char* msg) {
+  SWIG_Lua_pushferrstring(L,"%s: %s",errorType, msg);
+}
 
 /* -----------------------------------------------------------------------------
  * global swig types
@@ -293,22 +306,22 @@ typedef struct {
 } swig_lua_rawdata;
 
 /* Common SWIG API */
-#define SWIG_NewPointerObj(L, ptr, type, owner)       SWIG_Lua_NewPointerObj(L, (void *)ptr, type, owner)
-#define SWIG_ConvertPtr(L,idx, ptr, type, flags)    SWIG_Lua_ConvertPtr(L,idx,ptr,type,flags)
-#define SWIG_MustGetPtr(L,idx, type,flags, argnum,fnname)  SWIG_Lua_MustGetPtr(L,idx, type,flags, argnum,fnname)
+#define SWIG_NewPointerObj(ptr, type, owner)       SWIG_Lua_NewPointerObj(L, (void *)ptr, type, owner)
+#define SWIG_ConvertPtr(idx, ptr, type, flags)    SWIG_Lua_ConvertPtr(L,idx,ptr,type,flags)
+#define SWIG_MustGetPtr(idx, type,flags, argnum,fnname)  SWIG_Lua_MustGetPtr(L,idx, type,flags, argnum,fnname)
+/* For function pointers */
+/* TODO: Right now function pointers are opaque - we can't call pointer from lua. But it can and should be implemented
+ */
+#define SWIG_NewFunctionPtrObj(ptr, type) SWIG_NewPointerObj(ptr, type, 0)
+#define SWIG_ConvertFunctionPtr(idx, pptr, type) SWIG_ConvertPtr(idx, pptr, type, 0)
 /* for C++ member pointers, ie, member methods */
-#define SWIG_ConvertMember(L, idx, ptr, sz, ty)       SWIG_Lua_ConvertPacked(L, idx, ptr, sz, ty)
-#define SWIG_NewMemberObj(L, ptr, sz, type)      SWIG_Lua_NewPackedObj(L, ptr, sz, type)
+#define SWIG_ConvertMember(idx, ptr, sz, ty)       SWIG_Lua_ConvertPacked(L, idx, ptr, sz, ty)
+#define SWIG_NewMemberObj(ptr, sz, type)      SWIG_Lua_NewPackedObj(L, ptr, sz, type)
 
 /* Runtime API */
 #define SWIG_GetModule(clientdata) SWIG_Lua_GetModule((lua_State*)(clientdata))
 #define SWIG_SetModule(clientdata, pointer) SWIG_Lua_SetModule((lua_State*) (clientdata), pointer)
 #define SWIG_MODULE_CLIENTDATA_TYPE lua_State*
-
-/* Contract support */
-#define SWIG_contract_assert(expr, msg)  \
-  if (!(expr)) { SWIG_Lua_pusherrstring(L, (char *) msg); goto fail; } else
-
 
 /* helper #defines */
 #define SWIG_fail {goto fail;}
@@ -1520,10 +1533,10 @@ SWIGRUNTIME int  SWIG_Lua_ConvertPtr(lua_State *L,int index,void **ptr,swig_type
   return SWIG_ERROR;  /* error */
 }
 
-SWIGRUNTIME void* SWIG_Lua_MustGetPtr(lua_State *L,int index,swig_type_info *type,int flags,
-       int argnum,const char *func_name){
-  void *result;
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,index,&result,type,flags))){
+SWIGRUNTIME void* SWIG_Lua_MustGetPtr(lua_State* L,int index,swig_type_info *type,int flags,
+       int argnum,const char* func_name){
+  void* result;
+  if (!SWIG_IsOK(SWIG_Lua_ConvertPtr(L,index,&result,type,flags))){
     luaL_error (L,"Error in %s, expected a %s at argument number %d\n",
 		func_name,(type && type->str)?type->str:"void*",argnum);
   }
@@ -1627,12 +1640,12 @@ SWIG_Lua_InstallConstants(lua_State *L, swig_lua_const_info constants[]) {
       break;
     case SWIG_LUA_POINTER:
       lua_pushstring(L,constants[i].name);
-      SWIG_NewPointerObj(L,constants[i].pvalue, *(constants[i]).ptype,0);
+      SWIG_Lua_NewPointerObj(L,constants[i].pvalue, *(constants[i]).ptype,0);
       lua_rawset(L,-3);
       break;
     case SWIG_LUA_BINARY:
       lua_pushstring(L,constants[i].name);
-      SWIG_NewMemberObj(L,constants[i].pvalue,constants[i].lvalue,*(constants[i]).ptype);
+      SWIG_Lua_NewPackedObj(L,constants[i].pvalue,constants[i].lvalue,*(constants[i]).ptype);
       lua_rawset(L,-3);
       break;
     default:

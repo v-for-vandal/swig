@@ -6,6 +6,8 @@
 
 %runtime "swigrun.swg";         /* Common C API type-checking code */
 %runtime "luarun.swg";          /* Lua runtime stuff */
+%insert(runtime) "swigerrors.swg"; /* SWIG errors definition */
+%insert(runtime) "luaerrors.swg"; /* Lua errors auxilary functions */
 
 %insert(initbeforefunc) "swiginit.swg"
 

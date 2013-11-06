@@ -10,8 +10,9 @@
 %{
 #include <stdexcept>
 %}
-%include <exception.i>
+%include <typemaps/std_except.swg>
 
+/* TODO: REMOVE/REVIEW
 namespace std 
 {
   %ignore exception; // not sure if I should ignore this...
@@ -38,3 +39,4 @@ namespace std
 %typemap(throws) std::range_error       "SWIG_exception(SWIG_IndexError, $1.what());"
 %typemap(throws) std::runtime_error     "SWIG_exception(SWIG_RuntimeError, $1.what());"
 %typemap(throws) std::underflow_error   "SWIG_exception(SWIG_RuntimeError, $1.what());"
+*/
