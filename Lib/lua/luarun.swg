@@ -126,6 +126,11 @@ typedef struct swig_elua_entry {
 #include "lrotable.h"
 #endif
 #endif /* SWIG_LUA_ELUA_EMULATE*/
+
+#define SWIG_LUA_DECL_ARGS_1(arg1) (lua_State *L, arg1)
+#define SWIG_LUA_DECL_ARGS_2(arg1, arg2) (lua_State *L, arg1, arg2)
+#define SWIG_LUA_CALL_ARGS_1(arg1) (L, arg1)
+#define SWIG_LUA_CALL_ARGS_2(arg1, arg2) (L, arg1, arg2)
 /* -----------------------------------------------------------------------------
  * compatibility defines
  * ----------------------------------------------------------------------------- */
