@@ -79,7 +79,7 @@ public:
 %ignore std::vector<Space::Flow>::resize(size_type);
 #endif
 
-#if defined(SWIGTCL) || defined(SWIGPERL)
+#if defined(SWIGTCL) || defined(SWIGPERL) || defined(SWIGLUA)
 #define SWIG_GOOD_VECTOR
 /* here, for languages with bad declaration */
 %ignore std::vector<Space::Flow>::vector(unsigned int);

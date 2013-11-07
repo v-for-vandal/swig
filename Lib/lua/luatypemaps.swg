@@ -6,8 +6,8 @@
 
 #define SWIG_FROM_DECL_ARGS  SWIG_LUA_DECL_ARGS_1
 #define SWIG_FROM_CALL_ARGS  SWIG_LUA_CALL_ARGS_1
-#define SWIG_FROM_ARRAY_DECL_ARGS  SWIG_LUA_DECL_ARGS_2
-#define SWIG_FROM_ARRAY_CALL_ARGS  SWIG_LUA_CALL_ARGS_2
+#define SWIG_FROM_ARRAY_DECL_ARGS  SWIG_LUA_DECL_ARGS_1
+#define SWIG_FROM_ARRAY_CALL_ARGS  SWIG_LUA_CALL_ARGS_1
 
 /* Lua note:
  * Lua has no 'target language object' (aka SWIG_Object). There is no analog of PyObject* etc. This is why we can't write
@@ -43,7 +43,7 @@
 %define %set_output(obj) DO_SET_OUTPUT;obj;SWIG_arg++; %enddef
 
 
-%define %append_output(obj) DO_APPEND_OUTPUT($result,obj);SWIG_arg++; %enddef
+%define %append_output(obj) DO_APPEND_OUTPUT;obj;SWIG_arg++; %enddef
 
 //%define SWIG_LUA_CONSTTAB(Type...) SWIG_LUA_CONSTTAB_ ## Type// TODO: REMOVE
 %define %set_constant(name, value) add_lua_constant(name,value) %enddef
@@ -60,3 +60,11 @@
 
 // Redefine some typechecks
 %include <luatypechecks.swg>
+
+// This is fix for char[] handling. Current implementation of Lua doesn't respect
+// varin typemap and uses globalin instead
+%typemap(globalin,noblock=1,warning="462:Unable to set variable of type Char []") char []
+{
+  %variable_fail(SWIG_AttributeError, "$type", "read-only $name");
+}
+

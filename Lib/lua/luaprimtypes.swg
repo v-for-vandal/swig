@@ -100,6 +100,9 @@ SWIG_AsVal_dec(double)(int index, double *val)
 %numeric_double(long, "<limits.h>", LONG_MIN, LONG_MAX );
 %numeric_double(unsigned long, "<limits.h>", 0, ULONG_MAX );
 
+%numeric_double(long long, "<limits.h>", LONG_MIN, LONG_MAX );
+%numeric_double(unsigned long long, "<limits.h>", 0, ULONG_MAX );
+
 %numeric_double(signed char, "<limits.h>", SCHAR_MIN, SCHAR_MAX );
 %numeric_double(unsigned char, "<limits.h>", 0, UCHAR_MAX );
 

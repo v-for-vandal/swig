@@ -943,6 +943,7 @@ public:
    * variableWrapper()
    * ------------------------------------------------------------ */
 
+  // TODO: Make it respect varin/varout typemaps
   virtual int variableWrapper(Node *n) {
     /* NEW LANGUAGE NOTE:***********************************************
        Language::variableWrapper(n) will generate two wrapper fns

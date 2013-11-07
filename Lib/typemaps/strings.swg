@@ -13,6 +13,21 @@
 //
 //#define SWIG_PRESERVE_CARRAY_SIZE
 
+#ifndef SWIG_AS_ARRAY_DECL_ARGS
+#define SWIG_AS_ARRAY_DECL_ARGS
+#endif
+#ifndef SWIG_AS_ARRAY_CALL_ARGS
+#define SWIG_AS_ARRAY_CALL_ARGS
+#endif
+#ifndef SWIG_FROM_ARRAY_DECL_ARGS
+#define SWIG_FROM_ARRAY_DECL_ARGS
+#endif
+#ifndef SWIG_FROM_ARRAY_CALL_ARGS
+#define SWIG_FROM_ARRAY_CALL_ARGS
+#endif
+
+
+
 #define SWIG_AsCharNamePtr_frag(CharName)   "SWIG_As" #CharName "Ptr"
 #define SWIG_AsCharNameArray_frag(CharName)   "SWIG_As" #CharName "Array"
 #define SWIG_FromCharNamePtr_frag(CharName)    "SWIG_From" #CharName "Ptr"
@@ -25,12 +40,12 @@
 
 #define SWIG_AsCharNamePtr_dec(CharName)   SWIG_AsCharNamePtr_name(CharName) SWIG_AS_ARRAY_DECL_ARGS
 #define SWIG_AsCharNameArray_dec(CharName)   SWIG_AsCharNameArray_name(CharName) SWIG_AS_ARRAY_DECL_ARGS
-#define SWIG_FromCharNamePtr_dec(CharName)    SWIG_FromCharNamePtr_name(CharName) SWIG_FROM_DECL_ARGS
+#define SWIG_FromCharNamePtr_dec(CharName)    SWIG_FromCharNamePtr_name(CharName) SWIG_FROM_ARRAY_DECL_ARGS
 #define SWIG_FromCharNameArray_dec(CharName)    SWIG_FromCharNameArray_name(CharName) SWIG_FROM_ARRAY_DECL_ARGS
 
 #define SWIG_AsCharNamePtr(CharName)        SWIG_AsCharNamePtr_name(CharName) SWIG_AS_ARRAY_CALL_ARGS
 #define SWIG_AsCharNameArray(CharName)        SWIG_AsCharNameArray_name(CharName) SWIG_AS_ARRAY_CALL_ARGS
-#define SWIG_FromCharNamePtr(CharName)   	 SWIG_FromCharNamePtr_name(CharName) SWIG_FROM_CALL_ARGS
+#define SWIG_FromCharNamePtr(CharName)   	 SWIG_FromCharNamePtr_name(CharName) SWIG_FROM_ARRAY_CALL_ARGS
 #define SWIG_FromCharNameArray(CharName)   	  SWIG_FromCharNameArray_name(CharName) SWIG_FROM_ARRAY_CALL_ARGS
 
 /* ------------------------------------------------------------
