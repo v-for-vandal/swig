@@ -36,6 +36,11 @@ SWIG_Lua_AsCharPtrAndSize(lua_State *L, int index, char** cptr, size_t* psize, i
     }
     if (psize) *psize = len; // TODO: CHeck: len or len+1?
     return SWIG_OK;
+  } else if (lua_isnil(L,index) ) {
+    if (cptr) *cptr = 0;
+    if (psize) *psize = 0;
+    if (alloc) *alloc = SWIG_OLDOBJ;
+    return SWIG_OK;
   } else {
     swig_type_info* pchar_descriptor = SWIG_pchar_descriptor();
     if (pchar_descriptor) {
