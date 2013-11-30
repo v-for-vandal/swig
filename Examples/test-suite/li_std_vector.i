@@ -24,6 +24,13 @@ namespace std {
 %template(DoubleVector) std::vector<double>;
 %template(StringVector) std::vector<std::string>;
 
+#if !defined(SWIGR)
+%template(IntPtrVector) std::vector<int *>;
+%template(IntConstPtrVector) std::vector<const int *>;
+#endif
+%template(StructVector) std::vector<Struct>;
+%template(StructPtrVector) std::vector<Struct *>;
+%template(StructConstPtrVector) std::vector<const Struct *>;
 
 %inline %{
 typedef float Real;
@@ -75,13 +82,6 @@ const std::vector<Struct *> & vecstructptr(const std::vector<Struct *> & vec) { 
 const std::vector<const Struct *> & vecstructconstptr(const std::vector<const Struct *> & vec) { return vec; }
 %}
 
-#if !defined(SWIGR)
-%template(IntPtrVector) std::vector<int *>;
-%template(IntConstPtrVector) std::vector<const int *>;
-#endif
-%template(StructVector) std::vector<Struct>;
-%template(StructPtrVector) std::vector<Struct *>;
-%template(StructConstPtrVector) std::vector<const Struct *>;
 
 %inline {
   struct MyClass {};

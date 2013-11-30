@@ -79,6 +79,7 @@ static Hash *get_typemap(int tm_scope, const SwigType *type) {
 
   /* remove unary scope operator (::) prefix indicating global scope for looking up in the hashmap */
   hashtype = SwigType_remove_global_scope_prefix(type);
+  Printf(stdout, "Searching in typemaps[%d] %s for %s\n", tm_scope, typemaps[tm_scope], hashtype);
   tm = Getattr(typemaps[tm_scope], hashtype);
 
   Delete(dtype);
@@ -659,6 +660,10 @@ static void debug_search_result_display(Node *tm) {
 static Hash *typemap_search_helper(int debug_display, Hash *tm, const String *tm_method, SwigType *ctype, const String *cqualifiedname, const String *cname, Hash **backup) {
   Hash *result = 0;
   Hash *tm1;
+  /* TODO: REMOV */
+  Printf(stdout, "Typemap hash:\n");
+  Swig_print(tm, 2 );
+  /* END OF REMOVE */
   if (debug_display && cqualifiedname)
     Printf(stdout, "  Looking for: %s\n", SwigType_str(ctype, cqualifiedname));
   if (tm && cqualifiedname) {
@@ -2053,9 +2058,8 @@ static void replace_embedded_typemap(String *s, ParmList *parm_sublist, Wrapper 
  * Display all typemaps
  * ----------------------------------------------------------------------------- */
 
-void Swig_typemap_debug() {
+void Swig_typemap_debug( int nesting_level) {
   int ts;
-  int nesting_level = 2;
   Printf(stdout, "---[ typemaps ]--------------------------------------------------------------\n");
 
   ts = tm_scope;

@@ -93,19 +93,19 @@ namespace swig {
 
   template <class Type> struct traits_from {
     static SWIG_Object from SWIG_FROM_DECL_ARGS(const Type& val) {
-      return traits_from_ptr<SWIG_POINTER_OWN, Type>::from(new Type(val));
+      return traits_from_ptr<SWIG_POINTER_OWN, Type>::from SWIG_FROM_CALL_ARGS(new Type(val));
     }
   };
 
   template <class Type> struct traits_from<Type *> {
     static SWIG_Object from SWIG_FROM_DECL_ARGS(Type* val) {
-      return traits_from_ptr<0, Type>::from(val);
+      return traits_from_ptr<0, Type>::from SWIG_FROM_CALL_ARGS(val);
     }
   };
 
   template <class Type>
   inline SWIG_Object from SWIG_FROM_DECL_ARGS(const Type& val) {
-    return traits_from<Type>::from(val);
+    return traits_from<Type>::from SWIG_FROM_CALL_ARGS(val);
   }
 
   /*
@@ -232,14 +232,14 @@ namespace swig {
   template <>  struct traits_asval<Type > {   
     typedef Type value_type;
     static int asval SWIG_AS_DECL_ARGS (SWIG_Object obj, value_type *val) {
-      return SWIG_AsVal(Type)(obj, val);
+      return SWIG_AsVal(Type) SWIG_AS_CALL_ARGS(obj, val);
     }
   };
 
   template <>  struct traits_from<Type > {
     typedef Type value_type;
     static SWIG_Object from SWIG_FROM_DECL_ARGS (const value_type& val) {
-      return SWIG_From(Type)(val);
+      return SWIG_From(Type)SWIG_FROM_CALL_ARGS(val);
     }
   };
 }
@@ -265,14 +265,14 @@ namespace swig {
   template <>  struct traits_asptr<Type > {   
     typedef Type value_type;
     static int asptr SWIG_AS_DECL_ARGS (SWIG_Object obj, value_type **val) {
-      return SWIG_AsPtr(Type)(obj, val);
+      return SWIG_AsPtr(Type) SWIG_AS_CALL_ARGS(obj, val);
     }
   };
 
   template <>  struct traits_from<Type > {
     typedef Type value_type;
     static SWIG_Object from SWIG_FROM_DECL_ARGS (const value_type& val) {
-      return SWIG_From(Type)(val);
+      return SWIG_From(Type) SWIG_FROM_CALL_ARGS(val);
     }
   };
 }
@@ -285,8 +285,8 @@ namespace swig {
 
 %define %typemap_traits_value(Code,Type...)
   %typemaps_asvalfrom(%arg(Code),
-		      %arg(swig::asval),
-		      %arg(swig::from),
+		      %arg(swig::asval SWIG_AS_CALL_ARGS),
+		      %arg(swig::from SWIG_FROM_CALL_ARGS),
 		      %arg(SWIG_Traits_frag(Type)),
 		      %arg(SWIG_Traits_frag(Type)),
 		      Type);
@@ -298,8 +298,8 @@ namespace swig {
 
 %define %typemap_traits_pointer(Code,Type...)
   %typemaps_asptrfrom(%arg(Code),
-		      %arg(swig::asptr),
-		      %arg(swig::from),
+		      %arg(swig::asptr SWIG_AS_CALL_ARGS),
+		      %arg(swig::from SWIG_FROM_CALL_ARGS),
 		      %arg(SWIG_Traits_frag(Type)),
 		      %arg(SWIG_Traits_frag(Type)),
 		      Type);

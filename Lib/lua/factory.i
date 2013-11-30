@@ -1,7 +1,9 @@
+%include <typemaps/factory.swg>
 /*
 	A modification of factory.swg from the generic UTL library.
 */
 
+/* TODO: REMOVE
 %include <typemaps/swigmacros.swg>
 
 %define %_factory_dispatch(Type) 
@@ -21,3 +23,4 @@ if (!dcast) {
     SWIG_NewPointerObj(L, $1, $descriptor, $owner); SWIG_arg++;
   }
 }%enddef
+*/

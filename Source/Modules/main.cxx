@@ -1292,7 +1292,7 @@ int SWIG_main(int argc, char *argv[], Language *l) {
     Delete(top);
   }
   if (tm_debug)
-    Swig_typemap_debug();
+    Swig_typemap_debug(3);
   if (memory_debug)
     DohMemoryDebug();
 

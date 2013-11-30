@@ -286,6 +286,9 @@ typedef struct swig_lua_class {
   const char **base_names;
 } swig_lua_class;
 
+// TODO: Move common part of swig_lua_userdata and swig_lua_rawdata
+// into separate structure swig_lua_header
+
 /* this is the struct for wrapping all pointers in SwigLua
 */
 typedef struct {
@@ -1568,6 +1571,19 @@ SWIGRUNTIME int  SWIG_Lua_ConvertPacked(lua_State *L,int index,void *ptr,size_t 
   }
   return SWIG_ERROR;  /* error */
 }
+
+/* Checks that given userdata is SWIG object */
+SWIGRUNTIME int SWIG_Lua_IsSwigObject(lua_State *L, int index)
+{
+  // TODO: Implement adding enviroment to all lua userdata and giving
+  // them some tag
+  // TODO: Add emiting SWIG_LUA_SWIG_ONLY
+#ifdef SWIG_LUA_SWIG_ONLY
+  return lua_isuserdata(L,index);
+#else
+  return lua_isuserdata(L,index); // TODO Normal check here
+#endif
+} 
 
 /* a function to get the typestring of a piece of data */
 SWIGRUNTIME const char *SWIG_Lua_typename(lua_State *L, int tp)

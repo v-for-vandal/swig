@@ -90,6 +90,9 @@ Lua Options (available with -lua)\n\
      -squash-bases   - Squashes symbols from all inheritance tree of a given class\n\
                        into itself. Emulates pre-SWIG3.0 inheritance. Insignificantly\n\
                        speeds things up, but increases memory consumption.\n\
+     -std-prefer-native\n\
+                     - Return lua tables as C++ wraps for std containers when possible \n\
+                       Default is false\n\
      -elua-emulate   - Emulates behaviour of eLua. Usefull only for testing.\n\
                        Incompatible with -elua/-eluac options.\n\
 \n";
@@ -100,6 +103,7 @@ static int elua_opt_lvl = 2;
 static int eluac_ltr = 0;
 static int elua_emulate = 0;
 static int squash_bases = 0;
+static int std_prefer_native = 0;
 static int v2_compatibility = 0;
 static const int default_api_level = 2;
 
@@ -245,6 +249,9 @@ public:
 	} else if (strcmp(argv[i], "-elua-emulate") == 0) {
 	  Swig_mark_arg(i);
 	  elua_emulate = 1;
+	} else if (strcmp(argv[i], "-std-prefer-native") == 0) {
+	  std_prefer_native = 1;
+	  Swig_mark_arg(i);
 	}
       }
     }
@@ -354,6 +361,9 @@ public:
     }
     if (squash_bases)
       Printf(f_runtime, "#define SWIG_LUA_SQUASH_BASES\n");
+
+    if (std_prefer_native)
+      Printf(f_runtime, "#define SWIG_LUA_PREFER_NATIVE_CONTAINERS\n");
 
     //    if (NoInclude) {
     //      Printf(f_runtime, "#define SWIG_NOINCLUDE\n");

@@ -23,7 +23,11 @@ rv:push_back(11)
 rv:push_back(11.5)
 
 a=half(rv)
+assert(a ~= nil)
+assert(a:size() == rv:size())
 for i=0,rv:size()-1 do
+        assert(a[i] ~= nil)
+        assert(rv[i] ~= nil)
 	assert(near(a[i],rv[i]/2))
 end
 
@@ -43,13 +47,15 @@ for i=0,3 do
 end
 
 for i=0,3 do
-	assert(swig_type(sv[i]) =='Struct *' and sv[i].num==i)
+        assert(sv[i] ~= nil)
+	-- assert(swig_type(sv[i]) =='Struct *') -- commented out until we have proper swig_is_of_type method
+        assert(sv[i].num==i)
 end
 
 -- range checking
 idx=0
 function test_set() iv[idx]=0 end
-function test_get() iv[idx]=0 end
+function test_get() local tmp = iv[idx] end
 
 idx=0 --ok
 assert(pcall(test_get)==true)
@@ -64,3 +70,19 @@ idx=4 --should error
 assert(pcall(test_get)==false)
 assert(pcall(test_set)==false)
 
+-- lua sequences as vectors
+lua_rv = { 10, 9, 8, 7 }
+rv = vecreal(lua_rv)
+assert(rv:size() == 4)
+for i = 0,3 do
+    assert(rv[i] ~= nil)
+    assert(rv[i] == lua_rv[i+1])
+end
+
+lua_sv = { Struct(9), Struct(8), Struct(7), Struct(6) }
+sv = vecstruct(lua_sv)
+assert(sv:size() == 4)
+for i = 0,3 do
+    assert(sv[i] ~= nil)
+    assert(sv[i].num == lua_sv[i+1].num)
+end

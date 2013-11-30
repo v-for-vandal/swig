@@ -5,4 +5,4 @@ for operator[] access
 %rename(__getitem) *::getitem; // the v=X[i] (get operator)
 %rename(__setitem) *::setitem; // the X[i]=v (set operator)
 
-%include <../carrays.i>
+%include <typemaps/carrays.swg>

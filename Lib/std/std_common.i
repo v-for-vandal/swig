@@ -166,8 +166,8 @@ namespace swig {
 
 %define %typemap_traits(Code,Type...)
   %typemaps_asvalfrom(%arg(Code),
-		     %arg(swig::asval<Type >),
-		     %arg(swig::from),
+		     %arg(swig::asval<Type > SWIG_AS_CALL_ARGS),
+		     %arg(swig::from SWIG_FROM_CALL_ARGS),
 		     %arg(SWIG_Traits_frag(Type)),
 		     %arg(SWIG_Traits_frag(Type)),
 		     Type);
@@ -180,8 +180,8 @@ namespace swig {
 
 %define %typemap_traits_ptr(Code,Type...)
   %typemaps_asptrfrom(%arg(Code),
-		     %arg(swig::asptr),
-		     %arg(swig::from),
+		     %arg(swig::asptr SWIG_AS_CALL_ARGS),
+		     %arg(swig::from SWIG_FROM_CALL_ARGS),
 		     %arg(SWIG_Traits_frag(Type)),
 		     %arg(SWIG_Traits_frag(Type)),
 		     Type);

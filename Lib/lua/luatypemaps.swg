@@ -9,6 +9,9 @@
 #define SWIG_FROM_ARRAY_DECL_ARGS  SWIG_LUA_DECL_ARGS_1
 #define SWIG_FROM_ARRAY_CALL_ARGS  SWIG_LUA_CALL_ARGS_1
 
+#define SWIG_CHECK_DECL_ARGS SWIG_LUA_CALL_ARGS_1
+#define SWIG_CHECK_CALL_ARGS SWIG_LUA_CALL_ARGS_1
+
 /* Lua note:
  * Lua has no 'target language object' (aka SWIG_Object). There is no analog of PyObject* etc. This is why we can't write
  * SWIGINTERNINLINE Lua_Object*
